@@ -2,7 +2,10 @@ package dao;
 import utils.hashUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UsuarioDAO {
 
@@ -28,5 +31,21 @@ public class UsuarioDAO {
             throw new RuntimeException("Erro ao salvar usuário no banco", e);
         }
     }
-
+    // Add inside UsuarioDAO class:
+    public Map<String, String> getUserByUsername(Connection conexao, String username) throws SQLException {
+        String sql = "SELECT senha_hash, salt FROM usuarios WHERE username = ?";
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Map<String, String> result = new HashMap<>();
+                    result.put("senha_hash", rs.getString("senha_hash"));
+                    result.put("salt", rs.getString("salt"));
+                    return result;
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
 }
