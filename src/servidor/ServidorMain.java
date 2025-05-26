@@ -15,7 +15,7 @@ public class ServidorMain {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
         server.createContext("/login", new AuthAPI(dao));
-        server.createContext("/protected", new ProtectedAPI());  // <--- NEW!
+        server.createContext("/protected", new ProtectedAPI());
         server.setExecutor(null);
         server.start();
         System.out.println("Server started at http://localhost:8080");
